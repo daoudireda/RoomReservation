@@ -1,14 +1,12 @@
 package com.example.roomreservation.controllers;
 
 import com.example.roomreservation.entities.Reservation;
+import com.example.roomreservation.requests.EventData;
 import com.example.roomreservation.services.RoomReservationService;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -22,45 +20,26 @@ public class RoomReservationController {
         this.roomReservationService = roomReservationService;
     }
 
-
-    @GetMapping
-    public List<Reservation> getAllReservations() {
-        return roomReservationService.getAllReservations();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable long id) {
-        Reservation reservation = roomReservationService.getReservationById(id);
-        return new ResponseEntity<>(reservation, HttpStatus.OK);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-
-        Reservation savedReservation = roomReservationService.saveReservation(reservation);
+    @GetMapping(value = {"/getRoomReservations"})
+    public ResponseEntity<List<EventData>> getRoomReservations() {
+        List<EventData> roomReservations = roomReservationService.getRoomReservations();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(savedReservation);
-
+                .body(roomReservations);
     }
 
-    @GetMapping({"/{roomName}"})
-    public List<Reservation> getRoomReservations(@PathVariable String roomName,
-                                                 @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-                                                 @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
-        return roomReservationService.getRoomReservations(roomName, start, end);
+    @PostMapping(value = {"/addRoomReservation"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Reservation> addRoomReservation(@RequestBody EventData eventData) {
+        Reservation reservation = roomReservationService.addRoomReservation(eventData);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(reservation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteRoomReservation/{id}")
     public void deleteReservation(@PathVariable long id) {
         roomReservationService.deleteReservation(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Reservation> updateReservation(@PathVariable long id, @RequestBody Reservation updatedReservation) {
-        Reservation updateReservation = roomReservationService.updateReservation(id, updatedReservation);
-        return new ResponseEntity<>(updateReservation, HttpStatus.OK);
-
-    }
 
 }

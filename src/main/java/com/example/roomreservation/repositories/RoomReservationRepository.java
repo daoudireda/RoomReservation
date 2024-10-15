@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface RoomReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findReservationsByRoomNameAndReservedAtBetween(String roomName, Instant start, Instant end);
 }

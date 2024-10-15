@@ -1,7 +1,9 @@
 package com.example.roomreservation.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.time.Instant;
 
@@ -12,13 +14,10 @@ public class Reservation {
     private Long id;
     private String roomName;
     private String reservedBy;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private Instant reservedAt;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private Instant reservedUntil;
 
     public Reservation(String roomName, String reservedBy, Instant now, Instant localDateTime) {
-
         this.roomName = roomName;
         this.reservedBy = reservedBy;
         this.reservedAt = now;
@@ -29,6 +28,8 @@ public class Reservation {
     public Reservation() {
 
     }
+
+
 
     public void setId(Long id) {
         this.id = id;
